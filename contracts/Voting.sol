@@ -2,14 +2,13 @@
 pragma solidity 0.8.7;
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "../node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 /*********************************************************************************************************
  * @title Voting
  * @author
  * @dev
  ***********************************************************************************************************/
-contract Voting is Ownable, ReentrancyGuard{
+contract Voting is Ownable{
     
     using SafeMath for uint256;
     
@@ -32,7 +31,14 @@ contract Voting is Ownable, ReentrancyGuard{
         VotingSessionEnded,
         VotesTallied
     }
-    
+
+    mapping (address => Voter) private electeur;
+    address[] public addresses;
+    Proposal [] public proposition;
+    uint public winningProposalId;
+    WorkflowStatus public Status = WorkflowStatus.RegisteringVoters;
+    uint max=0;
+
     event VoterRegistered(address voterAddress);
     event ProposalsRegistrationStarted();
     event ProposalsRegistrationEnded();
@@ -43,11 +49,7 @@ contract Voting is Ownable, ReentrancyGuard{
     event VotesTallied();
     event WorkflowStatusChange(WorkflowStatus previousStatus, WorkflowStatus newStatus);
     
-    mapping (address => Voter) private electeur;
-    address[] public addresses;
-    Proposal [] public proposition;
-    uint public winningProposalId;
-    WorkflowStatus public Status = WorkflowStatus.RegisteringVoters;
+    
 
 
      
@@ -65,6 +67,9 @@ contract Voting is Ownable, ReentrancyGuard{
        emit VoterRegistered(_address);
        
    }
+    function Nb_Electeur() public view returns(uint){
+        return addresses.length;
+    }
    
 /*********************************************************************************************************
  * @dev L'administrateur du vote enregistre une liste blanche d'électeurs identifiés par leur adresse Ethereum.
@@ -97,8 +102,13 @@ contract Voting is Ownable, ReentrancyGuard{
         require(electeur[msg.sender].isRegistered==true,"Ne figure pas dans la whitelist");
         Proposal memory newPropo = Proposal(_information, 0); 
         proposition.push(newPropo);
-        
+        emit ProposalRegistered(proposition.length);
     }
+
+     function Nb_Proposition() public view returns(uint){
+        return proposition.length;
+    }
+    
     
 /*********************************************************************************************************
  * @dev L'administrateur de vote met fin à la session d'enregistrement des propositions.
@@ -136,6 +146,12 @@ contract Voting is Ownable, ReentrancyGuard{
         proposition[idPropal].voteCount=proposition[idPropal].voteCount.add(1);
         electeur[msg.sender].hasVoted=true;
         electeur[msg.sender].votedProposalId=idPropal;
+        if (proposition[idPropal].voteCount >max){
+               max =proposition[idPropal].voteCount;
+               winningProposalId=idPropal;
+               emit VotesTallied();
+        }
+        
         emit Voted(msg.sender,idPropal);
        
     }
@@ -152,27 +168,7 @@ contract Voting is Ownable, ReentrancyGuard{
        emit WorkflowStatusChange(WorkflowStatus.VotingSessionStarted,WorkflowStatus.VotingSessionEnded);
     }
    
-/*********************************************************************************************************
- * @dev Comptabilise
- * L'administrateur du vote comptabilise les votes.
- *******************************************************************************************************/
- 
- 
-    function Comptabilise () public  onlyOwner nonReentrant{
-        require(Status== WorkflowStatus.VotingSessionEnded,"La Session de vote doit etre ferme avant");
-       uint max =0;
-       for(uint i; i<proposition.length;i++){
-           if (proposition[i].voteCount >max){
-               max =proposition[i].voteCount;
-               winningProposalId=i;
-           }
-       }
-       emit VotesTallied();
-       Status = WorkflowStatus.VotesTallied;
-       emit WorkflowStatusChange(WorkflowStatus.VotingSessionEnded,WorkflowStatus.VotesTallied);
-       
-       
-    }
+
     
 /*********************************************************************************************************
  * @dev 
