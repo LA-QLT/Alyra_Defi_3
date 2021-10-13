@@ -9,6 +9,7 @@ import Voting from "./contracts/Voting.json";
 import getWeb3 from "./getWeb3";
 import "./App.css";
 
+
 class App extends Component {
 
   state = { 
@@ -118,8 +119,21 @@ class App extends Component {
       this.InitElecteur();
       this.InitProposal();
     });
-   
+    
+    contract.events.VotesTallied({},(err,event)=>{
+      console.log(err, event);
+      this.setState({ Status: "Fin des elections"});
+    });
+    window.ethereum.on('accountsChanged', () => this.CompteMetamaskModifier());
+    
   };
+  
+  CompteMetamaskModifier = async() => {
+    const { web3 } = this.state;
+    const reloadedAccounts = await web3.eth.getAccounts();
+    this.setState({ accounts: reloadedAccounts });
+  }
+
 
   InitElecteur = async () => {
     const {contract} = this.state;
@@ -145,6 +159,7 @@ class App extends Component {
     }    
     this.setState({proposals: proposals})
   }
+
   whitelist = async() => {
     const { accounts, contract } = this.state;
     const address = this.address.value;
@@ -153,22 +168,7 @@ class App extends Component {
     await contract.methods.whitelist(address).send({from: accounts[0]});       
 
   }
-  isWhitelist = async() => {
-    const {contract } = this.state;
-    const addressVerif = this.addressVerif.value;
-    
-    // Interaction avec le smart contract pour verifier la presence de l'adresse dans la whitelist
-    let isWhite = await contract.methods.isWhitelisted(addressVerif).call();
-
-    if(isWhite==0){
-      isWhite=`${addressVerif}  Ne fait pas partie de la whiteliste`
-    }else {
-      isWhite=`${addressVerif}  Fait partie de la whiteliste`
-    }
-    // Update state with the result.
-    this.setState({ isWhitelist: isWhite });
-    
-  }
+  
 
   StartEnregistrement = async() => {
     const { accounts, contract } = this.state;
@@ -226,8 +226,8 @@ class App extends Component {
   
 
   render() {
-    const { isWhitelist , winner,accounts, Status,isElecteur,proposals, Electeurs} = this.state;
-    console.log("c'est cdfsfd",this.state.Electeurs);
+    const {  winner,accounts, Status,isElecteur,proposals, Electeurs} = this.state;
+    
    
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
@@ -272,28 +272,7 @@ class App extends Component {
           }
            <br></br>
 
-          
-
-
-          <div style={{display: 'flex', justifyContent: 'center'}}>       
-            <Card style={{ width: '50rem' }}>
-              <Card.Header><strong>Verification</strong></Card.Header>
-              <Card.Body>
-                <Form.Group controlId="formAddress">
-                  <Form.Control type="text" id="addressVerif"
-                  ref={(input) => { this.addressVerif = input }}
-                  />
-                </Form.Group>
-                <Button onClick={ this.isWhitelist } variant="dark" > Verifier </Button>                         
-              </Card.Body>
-              <Card.Body>
-                <h2>
-                  {isWhitelist}
-                </h2>                      
-              </Card.Body>
-            </Card>         
-          </div>
-          <br></br>
+        
           
           { <div style={{display: 'flex', justifyContent: 'center'}}>
           <Card style={{ width: '50rem' }}>
@@ -350,7 +329,9 @@ class App extends Component {
               </Card>         
             </div>
           }
-          { <div style={{display: 'flex', justifyContent: 'center'}}>
+          
+          { isElecteur == 1 &&
+          <div style={{display: 'flex', justifyContent: 'center'}}>
           <Card style={{ width: '50rem' }}>
             <Card.Header><strong>Liste des proposition</strong></Card.Header>
             <Card.Body>
@@ -381,7 +362,8 @@ class App extends Component {
               </ListGroup>
             </Card.Body>
           </Card>
-        </div> }
+        </div> 
+        }
         
         <br></br>
 

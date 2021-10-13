@@ -149,7 +149,6 @@ contract Voting is Ownable{
         if (proposition[idPropal].voteCount >max){
                max =proposition[idPropal].voteCount;
                winningProposalId=idPropal;
-               emit VotesTallied();
         }
         
         emit Voted(msg.sender,idPropal);
@@ -162,8 +161,9 @@ contract Voting is Ownable{
  ***********************************************************************************************************/    
    
     function EndVote () public onlyOwner{
-        require(Status==WorkflowStatus.VotingSessionStarted,"La Session de vote doit etre ouverte");
+       // require(Status==WorkflowStatus.VotingSessionStarted,"La Session de vote doit etre ouverte");
        emit VotingSessionEnded();
+       emit VotesTallied();
        Status = WorkflowStatus.VotingSessionEnded;
        emit WorkflowStatusChange(WorkflowStatus.VotingSessionStarted,WorkflowStatus.VotingSessionEnded);
     }
