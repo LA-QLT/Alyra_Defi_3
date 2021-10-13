@@ -33,6 +33,7 @@ const getWeb3 = () =>
         resolve(web3);
       }
     });
+    
   });
 
 export default getWeb3;

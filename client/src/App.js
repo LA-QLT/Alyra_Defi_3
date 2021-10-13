@@ -35,15 +35,10 @@ class App extends Component {
       // Récupérer l’instance du smart contract “Whitelist” avec web3 et les informations du déploiement du fichier (client/src/contracts/Whitelist.json)
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = Voting.networks[networkId];
-      
-      
-
       const instance = new web3.eth.Contract(
         Voting.abi,
         deployedNetwork && deployedNetwork.address,
       );
-       
-      
      
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
@@ -60,10 +55,17 @@ class App extends Component {
 
   runInit = async () => {
     const {accounts, contract } = this.state;
-    
-    // Interaction avec le smart contract pour verifier le status 
-    const status = await contract.methods.Status().call();
+    const Etat = [
+      "Enregistrement des electeurs", 
+      "Debut de L'enregistrement des propositions a commencé", 
+      "Fin de L'enregistrement des propositions a commencé",
+      "Debut de l'enregistrement des votes",
+      "Fin de l'enregistrement des votes"
+    ];
 
+    // Interaction avec le smart contract pour verifier le status 
+    const status = Etat[await contract.methods.Status().call()];
+    
    
     // Interaction pour recupere l'adresse de l'admin
     const admin = await contract.methods.owner().call();  
@@ -75,7 +77,7 @@ class App extends Component {
     this.setState({ Status: status, isElecteur: electeur , owner : admin});
     this.InitElecteur();
     this.InitProposal();
-
+    
 
     //Enregistrement des evenements
     
@@ -89,6 +91,7 @@ class App extends Component {
       console.log(err, event);
       this.setState({ Status: "Debut de L'enregistrement des propositions a commencé"});
     });
+
     contract.events.ProposalsRegistrationEnded({},(err,event)=>{
       console.log(err,event);
       this.setState({ Status: "Fin de L'enregistrement des propositions a commencé"});
@@ -96,26 +99,27 @@ class App extends Component {
     });
     
     contract.events.ProposalRegistered({},(err,event)=>{
-      //console.log(err,event);
+      console.log(err,event);
       this.InitProposal();
     });
-
 
     contract.events.VotingSessionStarted({},(err,event)=>{
       console.log(err, event);
       this.setState({ Status: "Debut de l'enregistrement des votes"});
     });
+
     contract.events.VotingSessionEnded({},(err,event)=>{
       console.log(err, event);
       this.setState({ Status: "Fin de l'enregistrement des votes"});
     });
+
     contract.events.Voted({},(err,event)=>{
       console.log(err, event);
-     
+      this.InitElecteur();
+      this.InitProposal();
     });
    
   };
-
 
   InitElecteur = async () => {
     const {contract} = this.state;
@@ -129,14 +133,7 @@ class App extends Component {
     this.setState({Electeurs: Electeur})
   }
 
-  whitelist = async() => {
-    const { accounts, contract } = this.state;
-    const address = this.address.value;
-  
-    // Interaction avec le smart contract pour ajouter un compte 
-    await contract.methods.whitelist(address).send({from: accounts[0]});       
-
-  }
+ 
   InitProposal = async () => {
     const {contract} = this.state;
     const proposalCount = await contract.methods.Nb_Proposition().call();
@@ -148,7 +145,14 @@ class App extends Component {
     }    
     this.setState({proposals: proposals})
   }
+  whitelist = async() => {
+    const { accounts, contract } = this.state;
+    const address = this.address.value;
+  
+    // Interaction avec le smart contract pour ajouter un compte 
+    await contract.methods.whitelist(address).send({from: accounts[0]});       
 
+  }
   isWhitelist = async() => {
     const {contract } = this.state;
     const addressVerif = this.addressVerif.value;
@@ -355,7 +359,9 @@ class App extends Component {
                   <Table striped bordered hover>
                     <thead>
                       <tr>
-                        <th>@</th>
+                        <th>Id Proposition</th>
+                        <th>Description</th>
+                        <th>Nombre de Vote</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -366,6 +372,7 @@ class App extends Component {
                           <tr key={index}>
                           <td>{index}</td>
                           <td>{a.description}</td>
+                          <td>{a.voteCount}</td>
                           </tr>)  
                       }
                     </tbody>
