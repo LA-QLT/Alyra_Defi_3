@@ -84,6 +84,7 @@ class App extends Component {
     
     contract.events.VoterRegistered({},(err,event)=>{
       console.log(err, event);
+      console.log("C'est l'evenemenet celui ci ok", event);
       this.setState({ Status: "Enregistrement des electeurs"});
       this.InitElecteur();
     });
@@ -96,7 +97,6 @@ class App extends Component {
     contract.events.ProposalsRegistrationEnded({},(err,event)=>{
       console.log(err,event);
       this.setState({ Status: "Fin de L'enregistrement des propositions a commencé"});
-
     });
     
     contract.events.ProposalRegistered({},(err,event)=>{
@@ -116,7 +116,7 @@ class App extends Component {
 
     contract.events.Voted({},(err,event)=>{
       console.log(err, event);
-      this.InitElecteur();
+      //this.InitElecteur();
       this.InitProposal();
     });
     
@@ -129,9 +129,15 @@ class App extends Component {
   };
   
   CompteMetamaskModifier = async() => {
-    const { web3 } = this.state;
+    const { web3,contract } = this.state;
     const reloadedAccounts = await web3.eth.getAccounts();
-    this.setState({ accounts: reloadedAccounts });
+     // Interaction pour recupere l'adresse de l'admin
+     const admin = await contract.methods.owner().call();  
+
+     // Interaction avec le smart contract pour verifier si l'utilisateur est bien un electeur
+     const electeur = await contract.methods.isWhitelisted(reloadedAccounts[0]).call();
+     
+    this.setState({ accounts: reloadedAccounts, isElecteur: electeur , owner : admin });
   }
 
 
@@ -258,7 +264,7 @@ class App extends Component {
           
             <div style={{display: 'flex', justifyContent: 'center'}}>
               <Card style={{ width: '50rem' }}>
-                <Card.Header><strong>Autoriser un nouveau compte</strong></Card.Header>
+                <Card.Header><strong>Autorisation de nouveau compte</strong></Card.Header>
                 <Card.Body>
                   <Form.Group controlId="formAddress">
                     <Form.Control type="text" id="address"
@@ -274,7 +280,8 @@ class App extends Component {
 
         
           
-          { <div style={{display: 'flex', justifyContent: 'center'}}>
+          {isElecteur == 1 &&
+            <div style={{display: 'flex', justifyContent: 'center'}}>
           <Card style={{ width: '50rem' }}>
             <Card.Header><strong>Whitelist</strong></Card.Header>
             <Card.Body>

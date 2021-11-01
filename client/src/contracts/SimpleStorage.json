@@ -742,7 +742,7 @@
   "sourceMap": "56:176:1:-:0;;;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "56:176:1:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;103:53;;;;;;;;;;;;;:::i;:::-;;:::i;:::-;;160:70;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;103:53;150:1;137:10;:14;;;;103:53;:::o;160:70::-;196:4;215:10;;208:17;;160:70;:::o;7:139:6:-;53:5;91:6;78:20;69:29;;107:33;134:5;107:33;:::i;:::-;7:139;;;;:::o;152:329::-;211:6;260:2;248:9;239:7;235:23;231:32;228:119;;;266:79;;:::i;:::-;228:119;386:1;411:53;456:7;447:6;436:9;432:22;411:53;:::i;:::-;401:63;;357:117;152:329;;;;:::o;487:118::-;574:24;592:5;574:24;:::i;:::-;569:3;562:37;487:118;;:::o;611:222::-;704:4;742:2;731:9;727:18;719:26;;755:71;823:1;812:9;808:17;799:6;755:71;:::i;:::-;611:222;;;;:::o;920:77::-;957:7;986:5;975:16;;920:77;;;:::o;1126:117::-;1235:1;1232;1225:12;1249:122;1322:24;1340:5;1322:24;:::i;:::-;1315:5;1312:35;1302:63;;1361:1;1358;1351:12;1302:63;1249:122;:::o",
   "source": "// SPDX-License-Identifier: MIT\npragma solidity 0.8.7;\n\ncontract SimpleStorage {\n  uint storedData;\n\n  function set(uint x) public {\n    storedData = x;\n  }\n\n  function get() public view returns (uint) {\n    return storedData;\n  }\n}\n",
-  "sourcePath": "C:\\Users\\xtrem\\OneDrive\\Documents\\LearnDAPP_Alyra\\voting-react\\contracts\\SimpleStorage.sol",
+  "sourcePath": "C:\\Users\\xtrem\\OneDrive\\Documents\\LearnDAPP_Alyra\\HEROKU\\Heroku_Dapp\\voting-react\\contracts\\SimpleStorage.sol",
   "ast": {
     "absolutePath": "project:/contracts/SimpleStorage.sol",
     "exportedSymbols": {
@@ -1259,7 +1259,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-10-13T22:19:23.757Z",
+  "updatedAt": "2021-11-01T13:05:13.572Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

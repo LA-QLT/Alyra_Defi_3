@@ -1048,7 +1048,7 @@
   "sourceMap": "56:311:0:-:0;;;208:50;;;;;;;;;;243:10;235:5;;:18;;;;;;;;;;;;;;;;;;56:311;;;;;;",
   "deployedSourceMap": "56:311:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;104:36;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;80:20;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;262:103;;;;;;;;;;;;;:::i;:::-;;:::i;:::-;;104:36;;;;:::o;80:20::-;;;;;;;;;;;;:::o;262:103::-;191:5;;;;;;;;;;177:19;;:10;:19;;;173:26;;;351:9:::1;324:24;:36;;;;173:26:::0;262:103;:::o;7:139:6:-;53:5;91:6;78:20;69:29;;107:33;134:5;107:33;:::i;:::-;7:139;;;;:::o;152:329::-;211:6;260:2;248:9;239:7;235:23;231:32;228:119;;;266:79;;:::i;:::-;228:119;386:1;411:53;456:7;447:6;436:9;432:22;411:53;:::i;:::-;401:63;;357:117;152:329;;;;:::o;487:118::-;574:24;592:5;574:24;:::i;:::-;569:3;562:37;487:118;;:::o;611:::-;698:24;716:5;698:24;:::i;:::-;693:3;686:37;611:118;;:::o;735:222::-;828:4;866:2;855:9;851:18;843:26;;879:71;947:1;936:9;932:17;923:6;879:71;:::i;:::-;735:222;;;;:::o;963:::-;1056:4;1094:2;1083:9;1079:18;1071:26;;1107:71;1175:1;1164:9;1160:17;1151:6;1107:71;:::i;:::-;963:222;;;;:::o;1272:96::-;1309:7;1338:24;1356:5;1338:24;:::i;:::-;1327:35;;1272:96;;;:::o;1374:126::-;1411:7;1451:42;1444:5;1440:54;1429:65;;1374:126;;;:::o;1506:77::-;1543:7;1572:5;1561:16;;1506:77;;;:::o;1712:117::-;1821:1;1818;1811:12;1835:122;1908:24;1926:5;1908:24;:::i;:::-;1901:5;1898:35;1888:63;;1947:1;1944;1937:12;1888:63;1835:122;:::o",
   "source": "// SPDX-License-Identifier: MIT\npragma solidity 0.8.7;\n\ncontract Migrations {\n  address public owner;\n  uint public last_completed_migration;\n\n  modifier restricted() {\n    if (msg.sender == owner) _;\n  }\n\n  constructor() public {\n    owner = msg.sender;\n  }\n\n  function setCompleted(uint completed) public restricted {\n    last_completed_migration = completed;\n  }\n}\n",
-  "sourcePath": "C:\\Users\\xtrem\\OneDrive\\Documents\\LearnDAPP_Alyra\\voting-react\\contracts\\Migrations.sol",
+  "sourcePath": "C:\\Users\\xtrem\\OneDrive\\Documents\\LearnDAPP_Alyra\\HEROKU\\Heroku_Dapp\\voting-react\\contracts\\Migrations.sol",
   "ast": {
     "absolutePath": "project:/contracts/Migrations.sol",
     "exportedSymbols": {
@@ -1851,12 +1851,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x5DbE554ac1b67C49E97A33674524Cc887B9aFCBb",
-      "transactionHash": "0x5842e0792e1cbdbea264de3f4fff190a2c2a5be4af9935657c3c35df98dc64bf"
+      "address": "0xcaa56429E1931EE9296Fd9Da07a3197092A43a42",
+      "transactionHash": "0x29996e144ea9666799b4ce841aff553fb6ce2313531be8b07b66fba3463d4adc"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-10-13T22:19:27.299Z",
+  "updatedAt": "2021-11-01T13:05:17.271Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
