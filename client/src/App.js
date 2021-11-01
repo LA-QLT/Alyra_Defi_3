@@ -38,7 +38,7 @@ class App extends Component {
       const deployedNetwork = Voting.networks[14];
       const instance = new web3.eth.Contract(
         Voting.abi,
-        0xD1aA9c8177209517070707d203e73B86A4840d28,
+        "0xD1aA9c8177209517070707d203e73B86A4840d28",
       );
      
       // Set web3, accounts, and contract to the state, and then proceed with an
